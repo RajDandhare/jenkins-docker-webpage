@@ -1,5 +1,8 @@
 pipeline{
 	agent any
+	environment {
+		version = "${env.BUILD_ID}"
+	}
 	stages {
 		stage('fetch-code'){
 			steps {
@@ -13,7 +16,7 @@ pipeline{
 			steps{
 				sh '''
 				cd /git-files/jenkins-docker-webpage/
-				sudo ansible-playbook docker-build.yml
+				sudo ansible-playbook docker-build.yml --extra-vars "var=${version}"
 				'''
 			}
 		}
@@ -21,7 +24,7 @@ pipeline{
 			steps{
 				sh '''
 				cd /git-files/jenkins-docker-webpage/
-				sudo ansible-playbook docker-deploy.yml
+				sudo ansible-playbook docker-deploy.yml --extra-vars "var=${version}"
 				'''
 			}
 		}
